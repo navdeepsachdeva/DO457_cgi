@@ -1,0 +1,21 @@
+- name: Cisco IOS Playbook
+  hosts: iosxe1*
+  gather_facts: false
+  # vars_prompt NOT COMPATIBLE with Ansible controller/tower/awx
+  # vars_prompt:
+  #   - name: desc_level
+  #     prompt: "Enter your Level"
+  #     private: false
+  tasks:
+
+    - name: Change Description for GiGabit Ethernet 1
+      cisco.ios.ios_interfaces:
+        config:
+          - name: GigabitEthernet1
+            description: "{{ eth_desc }}"
+
+    - name: Configure the login banner
+      cisco.ios.ios_banner:
+        banner: login
+        state: present
+        text: "{{ eth_banner_colour }}"

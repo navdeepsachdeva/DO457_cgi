@@ -1,0 +1,27 @@
+- name: Cisco IOS Playbook
+  hosts: iosxe1.lab.example.com
+  # hosts:
+  #   - iosxe1.lab.example.com
+  #   - iosxe2.lab.example.com
+  # hosts: iosxe1.lab.example.com,iosxe2.lab.example.com
+  # hosts: cisco
+  gather_facts: false
+  tasks:
+    - name: Change Description for GiGabit Ethernet 1
+      cisco.ios.ios_interfaces:
+        config:
+          - name: GigabitEthernet1
+            description: "First NIC 11"
+
+    - name: Change Description for GiGabit Ethernet 2
+      cisco.ios.ios_interfaces:
+        config:
+          - name: GigabitEthernet2
+            description: "Second NIC 22"
+            # enabled: false
+
+    - name: Configure the login banner
+      cisco.ios.ios_banner:
+        banner: login
+        state: present
+        text: "Testing Login Banner"

@@ -1,0 +1,63 @@
+- name: IOS Play
+  hosts: iosxe1.lab.example.com
+  gather_facts: false
+  tasks:
+    - name: Current Host on IOS
+      ansible.builtin.debug:
+        msg: "I am Running on {{ inventory_hostname }}"
+
+    - name: Back up IOS configurations
+      cisco.ios.ios_config:
+        backup: true
+        backup_options:
+          filename: "{{ inventory_hostname }}.cfg"
+          dir_path: ./configbackups
+
+    - name: Configure the login banner
+      cisco.ios.ios_banner:
+        banner: login
+        state: present
+        text: |
+            Testing Login Banner Again
+            which is so long text,
+            I am Unable to Fit in One screen
+
+
+- name: Juniper Play
+  hosts: junos1.lab.example.com
+  gather_facts: false
+  tasks:
+    - name: Current Host on JUNOS
+      ansible.builtin.debug:
+        msg: "I am Running on {{ inventory_hostname }}"
+
+    - name: Which connection i am using
+      ansible.builtin.debug:
+        msg: "Original Connection = {{ ansible_connection }}"
+
+    - name: CHange Temporary to network_cli
+      ansible.builtin.debug:
+        msg: "Current Connection = {{ ansible_connection }}"
+      vars:
+        ansible_connection: ansible.netcommon.network_cli
+
+    - name: Enable the netconf service on port 830
+      junipernetworks.junos.junos_netconf:
+        netconf_port: 830
+        state: present
+      vars:
+        ansible_connection: ansible.netcommon.network_cli
+
+    - name: Back up Junos configurations
+      junipernetworks.junos.junos_config:
+        backup: true
+        backup_options:
+          filename: "{{ inventory_hostname }}.cfg"
+          dir_path: ./configbackups
+
+    - name: Disable the netconf service on port 830
+      junipernetworks.junos.junos_netconf:
+        netconf_port: 830
+        state: absent
+      vars:
+        ansible_connection: ansible.netcommon.network_cli

@@ -1,0 +1,45 @@
+- name: Cisco IOS Playbook
+  hosts: iosxe1* 
+  gather_facts: false
+  # gather_subset is "min" be default, so disabling it
+  tasks:
+    
+    - name: Collect Facts Manually
+      cisco.ios.ios_facts:
+        gather_subset: "all"
+
+    - name: Print Facts
+      ansible.builtin.debug:
+        msg: >
+            {{ ansible_net_api }}
+            {{ ansible_net_hostname }}
+            {{ ansible_net_model }}
+            {{ ansible_net_serialnum }}
+            {{ ansible_net_python_version }}
+            {{ ansible_net_version }}
+            {{ ansible_net_system }}
+
+    - name: Save Facts in File
+      ansible.builtin.copy:
+        dest: /tmp/{{ inventory_hostname }}_facts.txt
+        content: |
+            Network API     = {{ ansible_net_api }}
+            Network API     = {{ ansible_facts.net_api }}
+            Network API     = {{ ansible_facts['net_api'] }}
+            Hostname        = {{ ansible_net_hostname }}
+            Model           = {{ ansible_net_model }}
+            Serial No       = {{ ansible_net_serialnum }}
+            Python Version  = {{ ansible_net_python_version }}
+            Net Version     = {{ ansible_net_version }}
+            OS Type         = {{ ansible_net_system }}
+            Free Memory     = {{ ansible_net_memfree_mb }}
+            Total Memory    = {{ ansible_net_memtotal_mb }}
+      delegate_to: workstation.lab.example.com
+
+    - name: Configure the login banner
+      cisco.ios.ios_banner:
+        banner: login
+        state: present
+        text: "{{ ansible_net_system }} {{ ansible_net_serialnum }}"
+      when: ansible_net_api == "cliconf"
+

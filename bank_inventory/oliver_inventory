@@ -1,0 +1,50 @@
+## Inventory in INI Format ##
+
+utility.lab.example.com
+
+[cisco]
+#iosxe[1:2].lab.example.com
+iosxe1.lab.example.com
+iosxe2.lab.example.com desc_level="Level8_inventory_file_IOSXE2"
+
+[all:vars]
+# ansible_user=student
+# ansible_ssh_private_key_file=~/.ssh/lab_rsa
+desc_level="Level3_inventory_file"
+# ansible_password=student
+
+# [cisco:vars]
+# ansible_connection=ansible.netcommon.network_cli
+# ansible_network_os=cisco.ios.ios
+# ansible_become=true
+# ansible_become_method=enable
+
+[juniper]
+junos1.lab.example.com
+junos2.lab.example.com
+
+[juniper:vars]
+ansible_connection=ansible.netcommon.netconf
+ansible_network_os=junipernetworks.junos.junos
+
+[arista]
+arista1.lab.example.com
+arista2.lab.example.com
+
+[arista:vars]
+ansible_connection=ansible.netcommon.network_cli
+ansible_network_os=arista.eos.eos
+
+[control]
+workstation.lab.example.com
+
+[gitlab]
+git.lab.example.com
+
+[infra:children]
+control
+gitlab
+
+# [range]
+# device[1:8].lab.example.com
+# 192.168.[1:4].[5:8]

@@ -1,0 +1,23 @@
+- name: Convert Ad-Hoc to Playbook
+  hosts: utility*
+  remote_user: devops
+  # become: true
+  # become_method: sudo
+  # connection: ssh
+  tasks:
+    - name: Create File
+      ansible.builtin.copy:
+        content: "Hello Class aa"
+        dest: /tmp/file
+
+    - name: Create a User
+      ansible.builtin.user:
+        name: natsuko
+        comment: "NatSuko User"
+
+
+# Till 2.9 copy
+# 2.10 Onwards Collection
+# ansible (Company/Org/Namespace).builtin(Product).Module/Plugin
+# cisco(Namespace).ios(Product).ios_user(Module)
+# cisco.catalystwan.Module

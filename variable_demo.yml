@@ -1,0 +1,49 @@
+- name: Cisco IOS Playbook
+  hosts: cisco,juniper
+  gather_facts: false
+  vars:
+    desc_level: "Level_12_play_vars"
+  # Development Level
+  vars_prompt:
+    - name: desc_level
+      prompt: "Enter your Level"
+      private: false
+  vars_files:
+    - ./vars/outside_vars.yml
+  tasks:
+    - name: Set the fact
+      ansible.builtin.set_fact:
+        desc_level: "Level_19_set_fact"
+      when: myvar is not defined
+
+    - name: Read the variable file in Dynamic Way
+      ansible.builtin.include_vars:
+        file: vars/external_vars.yml
+      when: myvar is not defined
+
+    - name: Outside Block Task 1
+      ansible.builtin.debug:
+        msg: "Current Level = {{ desc_level }}"
+
+    - name: Block for Cisco Tasks
+      block:
+        - name: Inside Block Cisco Task 2
+          ansible.builtin.debug:
+            msg: "Current Level = {{ desc_level }}"
+
+        - name: Change Description for GiGabit Ethernet 1
+          vars:
+            desc_level: "Level_17_task_vars"
+          cisco.ios.ios_interfaces:
+            config:
+              - name: GigabitEthernet1
+                description: "{{ desc_level }}"
+      when: inventory_hostname in groups["cisco"]
+      vars:
+        desc_level: "Level_16_block_vars"
+
+    - name: Outside Block Task 3
+      ansible.builtin.debug:
+        msg: "Current Level = {{ desc_level }}"
+
+## ansible-navigator run variable_demo.yml -e "desc_level='Level_22_God_Level_Command_Line_GLOBAL_SCOPE'"

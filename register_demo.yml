@@ -1,0 +1,30 @@
+- name: Register Demo/Dependency Task Cisco IOS Playbook
+  hosts: iosxe1.lab.example.com
+  gather_facts: false
+  vars_files:
+    - vars/outside_vars.yml
+  tasks:
+    - name: Change Description for GiGabit Ethernet 1
+      cisco.ios.ios_interfaces:
+        config:
+          - name: GigabitEthernet1
+            description: "First NIC 1"
+      register: captured
+
+    - name: Print Caprtured Output
+      ansible.builtin.debug:
+        msg: "{{ captured }}"
+
+    # - name: Change Description for GiGabit Ethernet 2
+    #   cisco.ios.ios_interfaces:
+    #     config:
+    #       - name: GigabitEthernet2
+    #         description: "Second NIC 22"
+    #         # enabled: false
+
+    - name: Configure the login banner
+      cisco.ios.ios_banner:
+        banner: login
+        state: present
+        text: "Testing {{ vlan.hypervisors.name}} via register {{ vlan['dmz']['name'] }}"
+      when: captured.changed == true

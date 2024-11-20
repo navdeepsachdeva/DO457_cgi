@@ -1,0 +1,14 @@
+desc_level: "Level_14_play_vars_files"
+vlan:
+  hypervisors:
+    name: physical-servers
+    mtu: 9000
+    id: 1000
+  vms:
+    name: virtual-servers
+    mtu: 1500
+    id: 2000
+  dmz:
+    name: dmz
+    mtu: 1500
+    id: 3000
