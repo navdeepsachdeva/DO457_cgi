@@ -1,0 +1,34 @@
+- name: Import Variable Playbook
+  ansible.builtin.import_playbook: variable_demo.yml
+    
+- name: Import/Include Tasks Cisco Playbook
+  hosts: iosxe1.lab.example.com
+  gather_facts: false
+  tasks:
+
+    - name: Static Import task File
+      ansible.builtin.import_tasks:
+        file: tasks/external_cisco1.yml
+      when: wewe is not defined
+
+    - name: Dynamic Include task File
+      ansible.builtin.include_tasks:
+        file: tasks/external_cisco2.yml
+      when: wewe is not defined
+
+    - name: Configure the login banner
+      cisco.ios.ios_banner:
+        banner: login
+        state: present
+        text: "Testing Login Banner"
+
+    - name: Loop for include only not import
+      # ansible.builtin.import_tasks:
+      ansible.builtin.include_tasks:
+        file: "{{ item }}"
+      loop:
+        - tasks/external_cisco1.yml
+        - tasks/external_cisco2.yml
+      
+- name: Import a Linux System Playbook
+  ansible.builtin.import_playbook: convert.yml

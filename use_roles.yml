@@ -1,0 +1,96 @@
+- name: Roles Demo
+  hosts: iosxe1*
+  gather_facts: false
+  roles:
+    # - role: cisco_prerequisites
+    - role: cisco_config
+      cisco_config_desc1: "First NIC PLAY"
+      cisco_config_desc2: "Second NIC PLAY"
+
+  pre_tasks:
+    - name: Collect Facts Manually
+      cisco.ios.ios_facts:
+        gather_subset: "all"
+
+    - name: Save Facts in File
+      ansible.builtin.copy:
+        dest: /tmp/{{ inventory_hostname }}_facts.txt
+        content: |
+            Network API     = {{ ansible_net_api }}
+            Network API     = {{ ansible_facts.net_api }}
+            Network API     = {{ ansible_facts['net_api'] }}
+            Hostname        = {{ ansible_net_hostname }}
+            Model           = {{ ansible_net_model }}
+            Serial No       = {{ ansible_net_serialnum }}
+            Python Version  = {{ ansible_net_python_version }}
+            Net Version     = {{ ansible_net_version }}
+            OS Type         = {{ ansible_net_system }}
+            Free Memory     = {{ ansible_net_memfree_mb }}
+            Total Memory    = {{ ansible_net_memtotal_mb }}
+      delegate_to: workstation.lab.example.com
+      notify:
+        - facts_saved
+
+    - name: Check the Hardware requirements if met
+      ansible.builtin.assert:
+        that:
+          - ansible_net_api == "cliconf"
+          - ansible_net_memfree_mb >= 1840000
+        fail_msg: "Requirements not MET"
+        success_msg: "Hurray Device is fantastic"
+
+    - name: Inform customers about service down
+      ansible.builtin.command: sleep 4
+      notify:
+        - services_down
+
+  post_tasks:
+    - name: Inform customers about service up
+      ansible.builtin.command: sleep 4
+      notify:
+        - services_up
+
+
+  tasks:
+    - name: Create the backup file
+      cisco.ios.ios_config:
+        backup: true
+      register: create_file
+      notify:
+        - play_extra_task1_handler
+    
+    - name: Show create_file
+      ansible.builtin.debug:
+        var: create_file
+        verbosity: 1
+    
+    - name: Create or update the 'latest' link
+      ansible.builtin.file:
+        path: "/tmp/{{ create_file['shortname'] }}.latest"
+        src: "{{ create_file['filename'] }}"
+        state: file
+        force: true
+      delegate_to: workstation.lab.example.com
+      notify:
+        - play_extra_task2_handler
+
+  handlers:
+    - name: play_extra_task1_handler
+      ansible.builtin.debug:
+        msg: "Handler 1 Runs Success"
+
+    - name: play_extra_task2_handler
+      ansible.builtin.debug:
+        msg: "Handler 2 Runs Success"
+
+    - name: services_down
+      ansible.builtin.debug:
+        msg: "Instagram Down Sleep Now"
+
+    - name: services_up
+      ansible.builtin.debug:
+        msg: "Instagram UP Start wasting Time NOW"
+
+    - name: facts_saved
+      ansible.builtin.debug:
+        msg: "Facts Saved on COntrol Node"

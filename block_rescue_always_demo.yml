@@ -1,0 +1,52 @@
+- name: Block/ Rescue/ Always Playbook
+  hosts: iosxe1.lab.example.com
+  gather_facts: false
+  tasks:
+    - name: Outside Block Task 1
+      ansible.builtin.debug:
+        msg: "Current Level = {{ desc_level }}"
+
+    - name: Block for Cisco Tasks
+      block:
+        - name: Change Description for GiGabit Ethernet 1
+          cisco.ios.ios_interfaces:
+            config:
+              - name: GigabitEthernet1
+                description: "First NIC 11"
+
+        - name: Change Description for GiGabit Ethernet 2
+          cisco.ios.ios_interfaces:
+            config:
+              - name: GigabitEthernet22
+                description: "Second NIC 11"
+
+        - name: Configure the login banner
+          cisco.ios.ios_banner:
+            banner: login
+            state: present
+            text: "Testing Login Banner Again"
+      when: inventory_hostname in groups["cisco"]
+      rescue:
+        - name: Started Undoing Everything
+          ansible.builtin.debug:
+            msg: "MAY DAY MAY DAY"
+
+        - name: UNDO Description for GiGabit Ethernet 2
+          cisco.ios.ios_interfaces:
+            config:
+              - name: GigabitEthernet2
+                description: "Second NIC 2"
+
+        - name: UNDO Description for GiGabit Ethernet 1
+          cisco.ios.ios_interfaces:
+            config:
+              - name: GigabitEthernet1
+                description: "First NIC 1"
+      always:
+        - name: EMail to Stakeholders
+          ansible.builtin.debug:
+            msg: "EMAIL MODULE "
+
+        - name: save the device
+          cisco.ios.ios_config:
+            save_when: always

@@ -1,0 +1,4 @@
+---
+# vars file for cisco_config
+cisco_config_desc1: "First NIC vars Level_15"
+cisco_config_desc2: "Second NIC vars Level_15"

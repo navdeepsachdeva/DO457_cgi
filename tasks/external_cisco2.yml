@@ -1,0 +1,11 @@
+- name: Change Description for GE1
+  cisco.ios.ios_interfaces:
+    config: 
+      - name: GigabitEthernet1
+        description: "GE Desc 1"
+            
+- name: Change Description for GE2
+  cisco.ios.ios_interfaces:
+    config: 
+      - name: GigabitEthernet22
+        description: "GE Desc 2"

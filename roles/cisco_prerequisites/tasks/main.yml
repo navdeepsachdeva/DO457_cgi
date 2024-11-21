@@ -1,0 +1,19 @@
+---
+# tasks file for cisco_prerequisites
+
+- name: Configure the login banner
+  cisco.ios.ios_banner:
+    banner: "{{ cisco_prerequisites_banner }}"
+    state: present
+    text: "{{ cisco_prerequisites_banner_text }}"
+  notify:
+    - cisco_banner_changed
+
+- name: create a new user
+  cisco.ios.ios_user:
+    name: "{{ cisco_prerequisites_user }}"
+    configured_password: "{{ cisco_prerequisites_password }}"
+    update_password: always
+    state: present
+  notify:
+    - cisco_user_created

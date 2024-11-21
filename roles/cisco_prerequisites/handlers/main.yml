@@ -1,0 +1,10 @@
+---
+# handlers file for cisco_prerequisites
+
+- name: cisco_banner_changed
+  ansible.builtin.debug:
+    msg: "{{ cisco_prerequisites_banner }} Banner changed for {{ inventory_hostname}}"
+
+- name: cisco_user_created
+  ansible.builtin.debug:
+    msg: "{{ cisco_prerequisites_user }} created successfully on {{ inventory_hostname}}"

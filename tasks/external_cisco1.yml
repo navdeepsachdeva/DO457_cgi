@@ -1,0 +1,15 @@
+- name: Cisco Config Task 1
+  ansible.builtin.debug:
+    msg: "First Cisco Task"
+
+- name: Cisco Config Task 2
+  ansible.builtin.debug:
+    msg: "Second Cisco Task"
+
+- name: Cisco Config Task 3
+  ansible.builtin.debug:
+    msg: "Third Cisco Task"
+
+- name: Cisco Config Task 4
+  ansible.builtin.debug:
+    msg: "Fourth Cisco Task"

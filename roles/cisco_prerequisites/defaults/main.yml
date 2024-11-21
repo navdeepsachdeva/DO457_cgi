@@ -1,0 +1,6 @@
+---
+# defaults file for cisco_prerequisites
+cisco_prerequisites_banner: login
+cisco_prerequisites_banner_text: "Hello New Banner"
+cisco_prerequisites_user: mattias
+cisco_prerequisites_password: redhat

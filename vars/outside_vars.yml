@@ -1,4 +1,27 @@
 desc_level: "Level_14_play_vars_files"
+
+simple_list:
+  - mattias
+  - natsuko
+  - olivia
+  - oliver
+
+complex_list:
+  - fn: mattias
+    ln: a
+  - fn: natsuko
+    ln: g
+  - fn: olivia
+    ln: a
+  - fn: oliver
+    ln: s
+
+user_dict:
+  mattias: a
+  natsuko: g
+  olivia: a
+  oliver: s
+
 vlan:
   hypervisors:
     name: physical-servers
@@ -12,3 +35,12 @@ vlan:
     name: dmz
     mtu: 1500
     id: 3000
+
+myips:
+  - 172.25.250.254
+  - 10.10.2.20/8
+  - 192.168.2.15/24
+  - 192.268.2.15/24
+  - fe80::a1c0:e2e5:a201:8cfa/64
+  - 100.24.45.24/16
+  - 88.22.44.55/8

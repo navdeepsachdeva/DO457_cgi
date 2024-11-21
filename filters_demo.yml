@@ -1,0 +1,23 @@
+- name: Filters Demo
+  hosts: iosxe1*
+  gather_facts: false
+  vars_files:
+    - vars/outside_vars.yml
+  vars:
+    var1: "Jinja2 expressions"
+    ourvar: "something"
+  tasks:
+    - name: String Filters
+      ansible.builtin.debug:
+        msg: >
+            Ansible applies variable values to
+            {{ 'playbooks' | capitalize }} and templates by
+            using {{ var1 | upper | length }} and
+            {{ ourvar | default('Not Available') }}
+
+    - name: IP Filters
+      ansible.builtin.debug:
+        msg: "{{ myips | ansible.utils.ipv4('netmask') }}"
+        # msg: "{{ myips | ansible.utils.ipv4('public') }}"
+        # msg: "{{ myips | ansible.utils.ipv4('private') }}"
+        # msg: "{{ myips | ansible.utils.ipaddr | ansible.utils.ipv4 }}"

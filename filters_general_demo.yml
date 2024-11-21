@@ -1,0 +1,13 @@
+- name: Filters General Demo
+  hosts: utility*
+  gather_facts: false
+  become: true
+  remote_user: devops
+  tasks:
+
+    - name: Create a User
+      ansible.builtin.user:
+        name: natsuko
+        password: "{{ 'redhat' | password_hash('sha512') }}"
+        comment: "NatSuko User"
+

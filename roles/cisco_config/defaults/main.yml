@@ -1,0 +1,7 @@
+---
+# defaults file for cisco_config
+
+cisco_config_nic1: GigabitEthernet1
+cisco_config_desc1: "First NIC defaults Level2"
+cisco_config_nic2: GigabitEthernet2
+cisco_config_desc2: "Second NIC defaults Level2"

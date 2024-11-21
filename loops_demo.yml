@@ -1,0 +1,59 @@
+- name: Loops Demo
+  hosts: iosxe1*
+  gather_facts: false
+  vars_files:
+    - vars/outside_vars.yml
+  tasks:
+    - name: Difference lookup and query
+      ansible.builtin.debug:
+        msg: "{{ query('ansible.builtin.items', simple_list) }}"
+
+    - name: Print Simple List
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      when: item == "natsuko"
+      loop: "{{ query('ansible.builtin.items', simple_list) }}"
+      # loop: "{{ simple_list }}"
+      # with_items: "{{ simple_list }}"
+
+    - name: Print Complex List
+      ansible.builtin.debug:
+        msg: "{{ item.fn }} AND {{ item['ln'] }}"
+      loop: "{{ lookup('ansible.builtin.list', complex_list) }}"
+      # loop: "{{ complex_list }}"
+      # with_list: "{{ complex_list }}"
+
+    - name: Print Dict 
+      ansible.builtin.debug:
+        msg: "{{ item.key }} ++ {{ item.value }}"
+      loop: "{{ lookup('ansible.builtin.dict', user_dict) }}"
+      # loop: "{{ user_dict | dict2items }}"
+      # with_dict: "{{ user_dict }}"
+
+    - name: Print Sequence
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ query('ansible.builtin.sequence', 'start=0 end=5 format=eth%x') }}"
+        # msg: "eth{{ item }}"
+      # with_sequence: start=0 end=5 format=eth%x
+
+    - name: Print files in folder 
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ query('ansible.builtin.fileglob', 'vars/*') }}"
+      # with_fileglob:
+      #   - vars/*
+
+    - name: Run commands
+      cisco.ios.ios_command:
+        commands:
+          - show version
+          - show interfaces
+      register: captured
+
+    - name: Print Captured Output via LOOP
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ captured.stdout }}"
+
+# loop was introduced in ansible 2.5
