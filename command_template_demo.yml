@@ -1,0 +1,17 @@
+- name: Template Demo
+  hosts: iosxe1.lab.example.com
+  gather_facts: false
+  vars_files:
+    - vars/outside_vars.yml
+  tasks:
+    - name: Command Information Template
+      ansible.builtin.template:
+        dest: /tmp/commands.txt
+        src: j2/command_template.j2
+      delegate_to: workstation.lab.example.com
+
+    - name: Run commands
+      cisco.ios.ios_config:
+        src: j2/command_template.j2
+        # src: /tmp/commands.txt
+

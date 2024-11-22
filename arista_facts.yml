@@ -1,0 +1,7 @@
+- name: Arista Demo
+  hosts: arista1*
+  gather_facts: true
+  tasks:
+    - name: Print Arista Facts
+      ansible.builtin.debug:
+        msg: "{{ ansible_facts }}"

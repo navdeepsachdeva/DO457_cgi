@@ -1,0 +1,34 @@
+- name: Forks and Serial Demo/  rolling updates / CI-CD Config
+  hosts: all
+  gather_facts: false
+  serial:
+    - 10%
+    - 30%
+    - 50%
+    - 100%
+  max_fail_percentage: 35
+  order: sorted
+  vars:
+    mysystems:
+      - arista2.lab.example.com
+      - junos1.lab.example.com
+
+  # serial: 7
+  tasks:
+  - name: is database OK
+    ansible.builtin.command: sleep 2
+    run_once: true
+    
+  - name: Take down device from LB
+    ansible.builtin.command: sleep 2
+
+  - name: Update OS
+    ansible.builtin.command: sleep 2
+    failed_when: inventory_hostname in mysystems
+
+  - name: Update other Config
+    ansible.builtin.command: sleep 2
+
+  - name: Put device back to LB
+    ansible.builtin.command: sleep 2
+

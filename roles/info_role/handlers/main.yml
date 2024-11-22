@@ -1,0 +1,6 @@
+---
+# handlers file for info_role
+
+- name: extra_info_role_handler
+  ansible.builtin.debug:
+    msg: "handler from info_role"

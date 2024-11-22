@@ -1,0 +1,56 @@
+- name: Template Demo
+  hosts: iosxe1*
+  gather_facts: false
+  tasks:
+    - name: Collect Facts Manually
+      cisco.ios.ios_facts:
+        gather_subset:
+          - "all"
+
+    # - name: Collect Information Template
+    #   ansible.builtin.template:
+    #     dest: /tmp/{{ inventory_hostname }}_facts.txt
+    #     src: j2/simple.j2
+    #   delegate_to: workstation.lab.example.com
+
+
+    - name: Create Information Server on utility
+      block:
+        - name: Install httpd package
+          ansible.builtin.dnf:                       
+            name: httpd              
+            state: present
+
+        - name: Create file in /var/www/html/index.html
+          ansible.builtin.template:
+            dest: /var/www/html/index.html
+            src: j2/simple.j2
+            mode: 0644
+
+        - name: Open Firewall port
+          ansible.posix.firewalld: 
+            service: http
+            permanent: true
+            state: enabled
+            immediate: true
+
+        - name: Start httpd service
+          ansible.builtin.service:
+            name: httpd
+            state: started
+      delegate_to: utility.lab.example.com
+      become: true
+
+    - name: Access Page from WOrkstation
+      block:
+        - name: Access Web Server
+          ansible.builtin.uri:
+            url: http://utility.lab.example.com
+            return_content: true
+          register: output
+
+        - name: Print Web Page
+          ansible.builtin.debug:
+            msg: "{{ output.content }}"
+
+      delegate_to: workstation.lab.example.com

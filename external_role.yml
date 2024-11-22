@@ -1,0 +1,5 @@
+- name: Testing External Role and Collection
+  hosts: iosxe1*
+  gather_facts: false
+  roles:
+    - role: cisco.catalystwan.health_checks

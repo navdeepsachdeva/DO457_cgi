@@ -1,12 +1,6 @@
 - name: Roles Demo
   hosts: iosxe1*
   gather_facts: false
-  roles:
-    # - role: cisco_prerequisites
-    - role: cisco_config
-      cisco_config_desc1: "First NIC PLAY"
-      cisco_config_desc2: "Second NIC PLAY"
-
   pre_tasks:
     - name: Collect Facts Manually
       cisco.ios.ios_facts:
@@ -43,36 +37,47 @@
       ansible.builtin.command: sleep 4
       notify:
         - services_down
-
-  post_tasks:
-    - name: Inform customers about service up
-      ansible.builtin.command: sleep 4
-      notify:
-        - services_up
-
+  roles:
+    # - role: info_role
+    # - role: cisco_prerequisites
+    - role: cisco_config
 
   tasks:
     - name: Create the backup file
       cisco.ios.ios_config:
         backup: true
       register: create_file
+      #delegate_to: workstation.lab.example.com
       notify:
         - play_extra_task1_handler
     
     - name: Show create_file
       ansible.builtin.debug:
         var: create_file
-        verbosity: 1
+        # verbosity: 1
+      delegate_to: workstation.lab.example.com
     
     - name: Create or update the 'latest' link
       ansible.builtin.file:
-        path: "/tmp/{{ create_file['shortname'] }}.latest"
+        path: "/tmp/{{ inventory_hostname }}.latest"
         src: "{{ create_file['filename'] }}"
-        state: file
+        state: link
         force: true
       delegate_to: workstation.lab.example.com
       notify:
         - play_extra_task2_handler
+
+    - name: Run the info_role again via condition
+      ansible.builtin.include_role:
+      # ansible.builtin.import_role:
+        name: info_role
+      when: youme is defined
+
+  post_tasks:
+    - name: Inform customers about service up
+      ansible.builtin.command: sleep 4
+      notify:
+        - services_up
 
   handlers:
     - name: play_extra_task1_handler

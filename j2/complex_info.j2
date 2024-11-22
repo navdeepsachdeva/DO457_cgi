@@ -1,0 +1,18 @@
+
+{% for sys in groups["current"] %}
+
+Var System		= {{ sys }}
+Inventory Host		= {{ hostvars[sys].inventory_hostname }}
+Network API     	= {{ hostvars[sys].ansible_net_api }}        
+Network API     	= {{ hostvars[sys].ansible_facts.net_api }}    
+Network API     	= {{ hostvars[sys].ansible_facts['net_api'] }}
+Hostname        	= {{ hostvars[sys].ansible_net_hostname }}     
+Model           	= {{ hostvars[sys].ansible_net_model }}      
+Serial No       	= {{ hostvars[sys].ansible_net_serialnum }}    
+Python Version  	= {{ hostvars[sys].ansible_net_python_version }}
+Net Version     	= {{ hostvars[sys].ansible_net_version }}      
+OS Type         	= {{ hostvars[sys].ansible_net_system }}     
+Free Memory     	= {{ hostvars[sys].ansible_net_memfree_mb }} 
+Total Memory    	= {{ hostvars[sys].ansible_net_memtotal_mb }}
+
+{% endfor %}

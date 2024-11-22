@@ -1,0 +1,9 @@
+---
+# tasks file for info_role
+
+- name: Read the file from FIles Folder
+  ansible.builtin.debug:
+    msg: "{{ lookup('ansible.builtin.file','files/mefile.txt') }}"
+  changed_when: true
+  notify:
+    - extra_info_role_handler

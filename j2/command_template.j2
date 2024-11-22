@@ -1,0 +1,4 @@
+{% for me in eth_info %}
+interface {{ me.eth_nic }}
+	description "{{ me.eth_desc }}"
+{% endfor %}

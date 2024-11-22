@@ -1,0 +1,12 @@
+Inventory Host		= {{ inventory_hostname }}
+Network API     	= {{ ansible_net_api }}        
+Network API     	= {{ ansible_facts.net_api }}    
+Network API     	= {{ ansible_facts['net_api'] }}
+Hostname        	= {{ ansible_net_hostname }}     
+Model           	= {{ ansible_net_model }}      
+Serial No       	= {{ ansible_net_serialnum }}    
+Python Version  	= {{ ansible_net_python_version }}
+Net Version     	= {{ ansible_net_version }}      
+OS Type         	= {{ ansible_net_system }}     
+Free Memory     	= {{ ansible_net_memfree_mb }} 
+Total Memory    	= {{ ansible_net_memtotal_mb }}

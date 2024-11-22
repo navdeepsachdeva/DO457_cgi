@@ -16,6 +16,12 @@ complex_list:
   - fn: oliver
     ln: s
 
+eth_info:
+  - eth_nic: GigabitEthernet1
+    eth_desc: Firsct_NIC_1
+  - eth_nic: GigabitEthernet2
+    eth_desc: Second_NIC_2
+
 user_dict:
   mattias: a
   natsuko: g

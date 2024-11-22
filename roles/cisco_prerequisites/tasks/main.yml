@@ -17,3 +17,11 @@
     state: present
   notify:
     - cisco_user_created
+
+- name: Collect Information Template
+  ansible.builtin.template:
+    dest: /tmp/{{ inventory_hostname }}_facts.txt
+    src: simple.j2
+  notify:
+    - device_info_collected
+  delegate_to: workstation.lab.example.com

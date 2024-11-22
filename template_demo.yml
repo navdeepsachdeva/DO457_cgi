@@ -1,0 +1,46 @@
+- name: Template Demo
+  hosts: current
+  gather_facts: false
+  tasks:
+    - name: Collect Facts Manually for IOS
+      cisco.ios.ios_facts:
+        gather_subset:
+          - "all"
+      when: inventory_hostname in groups["cisco"]
+
+    # - name: Collect Facts Manually for EOS
+    #   arista.eos.eos_facts:
+    #     gather_subset:
+    #       - "all"
+    #   when: inventory_hostname in groups["arista"]
+
+    - name: Block for Junper Tasks
+      block:
+        - name: Enable the netconf service on port 830
+          junipernetworks.junos.junos_netconf:
+            netconf_port: 830
+            state: present
+          vars:
+            ansible_connection: ansible.netcommon.network_cli
+
+        - name: Collect Facts Manually for juniper
+          junipernetworks.junos.junos_facts:
+            gather_subset:
+              - "all"
+      when: inventory_hostname in groups["juniper"]
+
+    - name: Collect Information Template
+      ansible.builtin.template:
+        dest: /tmp/info.txt
+        #dest: /tmp/{{ inventory_hostname }}_facts.txt
+        src: j2/complex_info.j2
+      delegate_to: workstation.lab.example.com
+
+
+    - name: Disable the netconf service on port 830
+      junipernetworks.junos.junos_netconf:
+        netconf_port: 830
+        state: absent
+      vars:
+        ansible_connection: ansible.netcommon.network_cli
+      when: inventory_hostname in groups["juniper"]

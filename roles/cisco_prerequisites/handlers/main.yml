@@ -8,3 +8,7 @@
 - name: cisco_user_created
   ansible.builtin.debug:
     msg: "{{ cisco_prerequisites_user }} created successfully on {{ inventory_hostname}}"
+
+- name: device_info_collected
+  ansible.builtin.debug:
+    msg: "{{ inventory_hostname }} info collected in /tmp/{{ inventory_hostname }}_facts.txt"
