@@ -7,7 +7,8 @@
   become_user: USERNAME
   become_method: sudo/runas/su/enable
   connection: network_cli/ssh/winrm
-  gather_facts: yes/no  ## default enable/disable in ansible.cfg   ## gathering=explicit/implicit
+  order: inventory/reverse_inventory/sorted/reverse_sorted/shuffle
+  gather_facts: true/false  ## default enable/disable in ansible.cfg   ## gathering=explicit/implicit
   strategy: debug #for debugging on the run
   vars:
     myvars:
@@ -41,13 +42,13 @@
     - {role: ROLE_NAME, var1: value1, var2: value2}
   tasks:
     - name: TASK NAME
-      include_role:
+      ansible.builtin.include_role:
         name: ROLE_NAME
-      import_role:
+      ansible.builtin.import_role:
         name: ROLE_NAME
-      include_tasks: EXTERNAL_TASK_FILE.yml
-      import_tasks: EXTERNAL_TASK_FILE.yml
-      module_name:
+      ansible.builtin.include_tasks: EXTERNAL_TASK_FILE.yml
+      ansible.builtin.import_tasks: EXTERNAL_TASK_FILE.yml
+      FQCN.module_name:
         module_option1: valu1
         module_opt1: valuppp1
         # at debug console
@@ -68,6 +69,11 @@
       register: some_output
       ignore_errors: true/false
       become: true/false
+      # List of conditions is "and" operator be default
+      # "or" operator has to specifically defined
+      when:
+        - condition1 or condition2
+        - condition3
       vars:
         - VAR1: VALUE # VARIABLE ONLY FOR THIS TASK
         - VAR2: VALUE
@@ -75,12 +81,22 @@
         - TAG1
         - TAG2
       notify:
-        - HANDLER1
-        - HANDLER2
+        - name: handler1
+          MODULE_NAME:
+            module_option1: value1
+            module_option2: value2
 
-    - block:
+        - name: handler1
+          MODULE_NAME:
+            module_option1: value1
+            module_option2: value2
+          listen: handler1
+
+    - name: Run all task as ONE block
+      block:
         - task1:
         - task2: 
+      when: some_condition
       rescue:
         - task1: ROLLBACK TASK 1
         - task2: ROLLBACK TASK 2
